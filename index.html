@@ -17,15 +17,72 @@
     .card { border: 1px solid rgba(255,255,255,0.08); }
     .one-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .pill { border: 1px solid rgba(255,255,255,0.12); }
-    /* Spotify-like table */
-    .tracks-grid { grid-template-columns: 32px 1fr 120px 88px 88px; }
-    @media (max-width: 640px){ .tracks-grid { grid-template-columns: 28px 1fr 70px 70px; } .hide-sm { display:none; } }
+
+    /* Spotify-like columns (kept for consistency if needed elsewhere) */
+    .tracks-grid { grid-template-columns: 1fr auto; }
+
     /* Sticky Web Player (desktop) */
     #playerBar { transition: transform .3s ease; }
     #playerBar.hidden { transform: translateY(100%); }
+
     /* Modal */
     .modal { display:none; }
     .modal.open { display:flex; }
+
+    /* -------- New: Neon headings + scrollable playlist rows + slider -------- */
+    .neon {
+      text-transform: uppercase;
+      letter-spacing: .02em;
+      text-shadow:
+        0 0 6px var(--accent),
+        0 0 12px color-mix(in srgb, var(--accent) 60%, transparent),
+        0 0 24px color-mix(in srgb, var(--accent) 40%, transparent);
+      filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--accent) 35%, transparent));
+    }
+    .rows-viewport {
+      max-height: 420px;           /* ~10 lignes visibles */
+      overflow: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) transparent;
+    }
+    .rows-viewport::-webkit-scrollbar { height: 8px; width: 8px; }
+    .rows-viewport::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 8px; }
+    .slider {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 40%, #ffffff20));
+      outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px; height: 18px; border-radius: 999px;
+      background: #fff; border: 2px solid var(--accent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 60%, transparent);
+      cursor: grab;
+    }
+    .slider::-moz-range-thumb {
+      width: 18px; height: 18px; border-radius: 999px;
+      background: #fff; border: 2px solid var(--accent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 60%, transparent);
+      cursor: grab;
+    }
+    .track-row {
+      border: 1px solid color-mix(in srgb, var(--accent) 50%, #ffffff10);
+      transition: background .2s ease, border-color .2s ease, transform .05s ease;
+    }
+    .track-row:hover {
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .track-title {
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body class="bg-[#0b0b0c] text-white antialiased">
@@ -80,7 +137,7 @@
   <section class="grad-dark">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
       <div class="max-w-3xl">
-        <h1 class="text-4xl sm:text-5xl font-semibold leading-tight">Exclusive <span class="text-[#F6E7EB]">Music Service</span><br/>for <span class="underline decoration-[#F6E7EB]/40 underline-offset-4">ONLYFANS</span> Creators</h1>
+        <h1 class="text-4xl sm:text-5xl font-semibold leading-tight">The Exclusive <span class="text-[#F6E7EB]">Music Service</span><br/>for <span class="underline decoration-[#F6E7EB]/40 underline-offset-4">ONLYFANS</span> Creators</h1>
         <p class="mt-5 text-white/80 text-lg">Engaging, modern, and copyright-safe instrumentals designed for your brand — <span class="font-semibold text-white">without ContentID headaches</span>. Built for premium OnlyFans creators.</p>
         <div class="mt-8 flex flex-wrap gap-4">
           <a href="#store" class="px-6 py-3 rounded-xl bg-white text-black font-semibold">Shop Single Tracks — $49</a>
@@ -97,110 +154,198 @@
     </div>
   </section>
 
-  <!-- STORE: 2x2 Playlists Layout -->
+  <!-- STORE: 2x2 Playlists Layout (HALLOWEEN stays top-right) -->
   <section id="store" class="bg-[#0e1116] py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-end justify-between gap-6">
         <div>
           <h2 class="text-3xl font-semibold">$49 Track Store (Non-Exclusive)</h2>
-          <p class="text-white/70 mt-2">Pick your vibe. Pay $49 per track. Instant license + download. Royalty-free for your channel, including paid ads.</p>
-          <p class="text-white/70 mt-2">All tracks are delivered in perfect loops. They’ll never cut off mid-scene. Download lengths from 5, 10, 20, or 30 minutes (plus the original version) so your content flows naturally.</p>
+          <p class="text-white/70 mt-2">Pick your vibe. Pay <span class="font-semibold text-white">$49</span> per track. Instant license + download. Royalty-free for your channel, including paid ads.</p>
+          <p class="text-white/70 mt-2">All tracks are delivered in perfect loops. They’ll never cut off mid-scene. Download lengths from <span class="font-semibold text-white">5, 10, 20, or 30 minutes</span> (plus the original version) so your content flows naturally.</p>
           <p class="text-xs text-white/50 mt-1">Other creators may license the same track.</p>
         </div>
         <a href="#license" class="text-sm underline text-white/70 hover:text-white">License details</a>
       </div>
 
-      <!-- Grid: 1 col mobile, 2 cols desktop -->
       <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Smooth RnB (Top-left) -->
-        <article class="rounded-2xl card p-6" style="--accent:#6f4bb2; --bg:#241d2e; background:var(--bg); border-color:var(--accent); border-width:1px;">
+        <article class="rounded-2xl card p-6" style="--accent: #6f4bb2; --bg: #241d2e; background: var(--bg); border-color: var(--accent); border-width:1px;">
           <header class="mb-4">
-            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
-            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">Smooth RnB</h3>
+            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">Playlist</span>
+            <h3 class="text-2xl font-extrabold mb-1 neon">Smooth RnB</h3>
             <p class="text-white/80 mb-1">Silky keys for intimate, late night vibes.</p>
             <p class="italic text-white/50 mb-2">Perfect for conversations & slow moments.</p>
           </header>
-          <div class="space-y-2">
-            <!-- 10 static rows -->
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 1</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop1.mp3" data-title="Smooth RnB loop 1" aria-label="Play Smooth RnB loop 1">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-1" href="#buy-smoothrnb-1" aria-label="Buy Smooth RnB loop 1 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 2</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop2.mp3" data-title="Smooth RnB loop 2" aria-label="Play Smooth RnB loop 2">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-2" href="#buy-smoothrnb-2" aria-label="Buy Smooth RnB loop 2 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 3</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop3.mp3" data-title="Smooth RnB loop 3" aria-label="Play Smooth RnB loop 3">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-3" href="#buy-smoothrnb-3" aria-label="Buy Smooth RnB loop 3 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 4</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop4.mp3" data-title="Smooth RnB loop 4" aria-label="Play Smooth RnB loop 4">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-4" href="#buy-smoothrnb-4" aria-label="Buy Smooth RnB loop 4 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 5</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop5.mp3" data-title="Smooth RnB loop 5" aria-label="Play Smooth RnB loop 5">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-5" href="#buy-smoothrnb-5" aria-label="Buy Smooth RnB loop 5 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 6</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop6.mp3" data-title="Smooth RnB loop 6" aria-label="Play Smooth RnB loop 6">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-6" href="#buy-smoothrnb-6" aria-label="Buy Smooth RnB loop 6 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 7</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop7.mp3" data-title="Smooth RnB loop 7" aria-label="Play Smooth RnB loop 7">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-7" href="#buy-smoothrnb-7" aria-label="Buy Smooth RnB loop 7 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 8</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop8.mp3" data-title="Smooth RnB loop 8" aria-label="Play Smooth RnB loop 8">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-8" href="#buy-smoothrnb-8" aria-label="Buy Smooth RnB loop 8 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 9</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop9.mp3" data-title="Smooth RnB loop 9" aria-label="Play Smooth RnB loop 9">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-9" href="#buy-smoothrnb-9" aria-label="Buy Smooth RnB loop 9 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Smooth RnB loop 10</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop10.mp3" data-title="Smooth RnB loop 10" aria-label="Play Smooth RnB loop 10">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-10" href="#buy-smoothrnb-10" aria-label="Buy Smooth RnB loop 10 for $49">Buy $49</a></div></div>
+
+          <!-- 20 tracks, only 10 visible with scroll + slider -->
+          <div class="rows-viewport space-y-2" data-scrollable>
+            <!-- Smooth RnB loops 1..20 -->
+            <!-- prettier-ignore -->
+            <div class="track-row rounded-lg px-3 py-2 flex items-center justify-between">
+              <span class="font-medium text-white track-title">SMOOTH RNB LOOP 1</span>
+              <div class="flex gap-2">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold"
+                        data-src="/audio/smoothrnb/loop1.mp3" data-title="SMOOTH RNB LOOP 1" aria-label="Play SMOOTH RNB LOOP 1">Play</button>
+                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold"
+                   data-sku="smoothrnb-1" href="#buy-smoothrnb-1" aria-label="Buy SMOOTH RNB LOOP 1 for $49">Buy $49</a>
+              </div>
+            </div>
+            <!-- We'll create items 2..20 similarly -->
+            <!-- loops 2..20 -->
+            <script>
+              // This inline generator writes items 2..20 for this card only at runtime to keep HTML readable.
+              (function(){
+                const container = document.currentScript.previousElementSibling.parentElement;
+                const accent = getComputedStyle(container.closest('article')).getPropertyValue('--accent').trim() || '#6f4bb2';
+                const parent = container;
+                for (let i=2;i<=20;i++){
+                  const row = document.createElement('div');
+                  row.className = 'track-row rounded-lg px-3 py-2 flex items-center justify-between';
+                  row.innerHTML = `
+                    <span class="font-medium text-white track-title">SMOOTH RNB LOOP ${i}</span>
+                    <div class="flex gap-2">
+                      <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold"
+                              data-src="/audio/smoothrnb/loop${i}.mp3" data-title="SMOOTH RNB LOOP ${i}" aria-label="Play SMOOTH RNB LOOP ${i}">Play</button>
+                      <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold"
+                         data-sku="smoothrnb-${i}" href="#buy-smoothrnb-${i}" aria-label="Buy SMOOTH RNB LOOP ${i} for $49">Buy $49</a>
+                    </div>`;
+                  parent.appendChild(row);
+                }
+              })();
+            </script>
+          </div>
+          <div class="mt-3">
+            <input class="slider" type="range" min="0" value="0" step="1" data-slider aria-label="Scroll Smooth RnB playlist"/>
           </div>
         </article>
 
         <!-- Halloween — Limited Edition (Top-right) -->
-        <article class="rounded-2xl card p-6" style="--accent:#ff8300; --bg:#251a10; background:var(--bg); border-color:var(--accent); border-width:1px;">
+        <article class="rounded-2xl card p-6" style="--accent: #ff8300; --bg: #251a10; background: var(--bg); border-color: var(--accent); border-width:1px;">
           <header class="mb-4">
-            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
-            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">Halloween — Limited Edition</h3>
+            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">Playlist</span>
+            <h3 class="text-2xl font-extrabold mb-1 neon">Halloween — Limited Edition</h3>
             <p class="text-white/80 mb-1">Seductive spooky beats for October.</p>
             <p class="italic text-white/50 mb-2">Limited vibes • Only Oct 1–31.</p>
           </header>
-          <div class="space-y-2">
-            <!-- 10 static rows -->
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 1</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop1.mp3" data-title="Halloween loop 1" aria-label="Play Halloween loop 1">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-1" href="#buy-halloween-1" aria-label="Buy Halloween loop 1 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 2</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop2.mp3" data-title="Halloween loop 2" aria-label="Play Halloween loop 2">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-2" href="#buy-halloween-2" aria-label="Buy Halloween loop 2 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 3</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop3.mp3" data-title="Halloween loop 3" aria-label="Play Halloween loop 3">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-3" href="#buy-halloween-3" aria-label="Buy Halloween loop 3 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 4</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop4.mp3" data-title="Halloween loop 4" aria-label="Play Halloween loop 4">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-4" href="#buy-halloween-4" aria-label="Buy Halloween loop 4 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 5</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop5.mp3" data-title="Halloween loop 5" aria-label="Play Halloween loop 5">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-5" href="#buy-halloween-5" aria-label="Buy Halloween loop 5 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 6</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop6.mp3" data-title="Halloween loop 6" aria-label="Play Halloween loop 6">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-6" href="#buy-halloween-6" aria-label="Buy Halloween loop 6 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 7</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop7.mp3" data-title="Halloween loop 7" aria-label="Play Halloween loop 7">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-7" href="#buy-halloween-7" aria-label="Buy Halloween loop 7 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 8</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop8.mp3" data-title="Halloween loop 8" aria-label="Play Halloween loop 8">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-8" href="#buy-halloween-8" aria-label="Buy Halloween loop 8 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 9</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop9.mp3" data-title="Halloween loop 9" aria-label="Play Halloween loop 9">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-9" href="#buy-halloween-9" aria-label="Buy Halloween loop 9 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Halloween loop 10</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop10.mp3" data-title="Halloween loop 10" aria-label="Play Halloween loop 10">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-10" href="#buy-halloween-10" aria-label="Buy Halloween loop 10 for $49">Buy $49</a></div></div>
+
+          <div class="rows-viewport space-y-2" data-scrollable>
+            <!-- loop 1 -->
+            <div class="track-row rounded-lg px-3 py-2 flex items-center justify-between">
+              <span class="font-medium text-white track-title">HALLOWEEN LOOP 1</span>
+              <div class="flex gap-2">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold"
+                        data-src="/audio/halloween/loop1.mp3" data-title="HALLOWEEN LOOP 1" aria-label="Play HALLOWEEN LOOP 1">Play</button>
+                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold"
+                   data-sku="halloween-1" href="#buy-halloween-1" aria-label="Buy HALLOWEEN LOOP 1 for $49">Buy $49</a>
+              </div>
+            </div>
+            <script>
+              (function(){
+                const parent = document.currentScript.previousElementSibling.parentElement;
+                for (let i=2;i<=20;i++){
+                  const row = document.createElement('div');
+                  row.className = 'track-row rounded-lg px-3 py-2 flex items-center justify-between';
+                  row.innerHTML = `
+                    <span class="font-medium text-white track-title">HALLOWEEN LOOP ${i}</span>
+                    <div class="flex gap-2">
+                      <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold"
+                              data-src="/audio/halloween/loop${i}.mp3" data-title="HALLOWEEN LOOP ${i}" aria-label="Play HALLOWEEN LOOP ${i}">Play</button>
+                      <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold"
+                         data-sku="halloween-${i}" href="#buy-halloween-${i}" aria-label="Buy HALLOWEEN LOOP ${i} for $49">Buy $49</a>
+                    </div>`;
+                  parent.appendChild(row);
+                }
+              })();
+            </script>
+          </div>
+          <div class="mt-3">
+            <input class="slider" type="range" min="0" value="0" step="1" data-slider aria-label="Scroll Halloween playlist"/>
           </div>
         </article>
 
         <!-- HEAT (Bottom-left) -->
-        <article class="rounded-2xl card p-6" style="--accent:#e23c3c; --bg:#241313; background:var(--bg); border-color:var(--accent); border-width:1px;">
+        <article class="rounded-2xl card p-6" style="--accent: #e23c3c; --bg: #241313; background: var(--bg); border-color: var(--accent); border-width:1px;">
           <header class="mb-4">
-            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
-            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">HEAT</h3>
+            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">Playlist</span>
+            <h3 class="text-2xl font-extrabold mb-1 neon">HEAT</h3>
             <p class="text-white/80 mb-1">Hard-hitting 808s, crisp hats, energetic club beats.</p>
             <p class="italic text-white/50 mb-2">Perfect for body-moving clips & shorts.</p>
           </header>
-          <div class="space-y-2">
-            <!-- 10 static rows -->
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 1</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop1.mp3" data-title="HEAT loop 1" aria-label="Play HEAT loop 1">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-1" href="#buy-heat-1" aria-label="Buy HEAT loop 1 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 2</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop2.mp3" data-title="HEAT loop 2" aria-label="Play HEAT loop 2">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-2" href="#buy-heat-2" aria-label="Buy HEAT loop 2 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 3</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop3.mp3" data-title="HEAT loop 3" aria-label="Play HEAT loop 3">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-3" href="#buy-heat-3" aria-label="Buy HEAT loop 3 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 4</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop4.mp3" data-title="HEAT loop 4" aria-label="Play HEAT loop 4">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-4" href="#buy-heat-4" aria-label="Buy HEAT loop 4 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 5</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop5.mp3" data-title="HEAT loop 5" aria-label="Play HEAT loop 5">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-5" href="#buy-heat-5" aria-label="Buy HEAT loop 5 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 6</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop6.mp3" data-title="HEAT loop 6" aria-label="Play HEAT loop 6">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-6" href="#buy-heat-6" aria-label="Buy HEAT loop 6 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 7</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop7.mp3" data-title="HEAT loop 7" aria-label="Play HEAT loop 7">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-7" href="#buy-heat-7" aria-label="Buy HEAT loop 7 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 8</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop8.mp3" data-title="HEAT loop 8" aria-label="Play HEAT loop 8">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-8" href="#buy-heat-8" aria-label="Buy HEAT loop 8 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 9</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop9.mp3" data-title="HEAT loop 9" aria-label="Play HEAT loop 9">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-9" href="#buy-heat-9" aria-label="Buy HEAT loop 9 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">HEAT loop 10</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop10.mp3" data-title="HEAT loop 10" aria-label="Play HEAT loop 10">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-10" href="#buy-heat-10" aria-label="Buy HEAT loop 10 for $49">Buy $49</a></div></div>
+
+          <div class="rows-viewport space-y-2" data-scrollable>
+            <div class="track-row rounded-lg px-3 py-2 flex items-center justify-between">
+              <span class="font-medium text-white track-title">HEAT LOOP 1</span>
+              <div class="flex gap-2">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold"
+                        data-src="/audio/heat/loop1.mp3" data-title="HEAT LOOP 1" aria-label="Play HEAT LOOP 1">Play</button>
+                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold"
+                   data-sku="heat-1" href="#buy-heat-1" aria-label="Buy HEAT LOOP 1 for $49">Buy $49</a>
+              </div>
+            </div>
+            <script>
+              (function(){
+                const parent = document.currentScript.previousElementSibling.parentElement;
+                for (let i=2;i<=20;i++){
+                  const row = document.createElement('div');
+                  row.className = 'track-row rounded-lg px-3 py-2 flex items-center justify-between';
+                  row.innerHTML = `
+                    <span class="font-medium text-white track-title">HEAT LOOP ${i}</span>
+                    <div class="flex gap-2">
+                      <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold"
+                              data-src="/audio/heat/loop${i}.mp3" data-title="HEAT LOOP ${i}" aria-label="Play HEAT LOOP ${i}">Play</button>
+                      <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold"
+                         data-sku="heat-${i}" href="#buy-heat-${i}" aria-label="Buy HEAT LOOP ${i} for $49">Buy $49</a>
+                    </div>`;
+                  parent.appendChild(row);
+                }
+              })();
+            </script>
+          </div>
+          <div class="mt-3">
+            <input class="slider" type="range" min="0" value="0" step="1" data-slider aria-label="Scroll HEAT playlist"/>
           </div>
         </article>
 
         <!-- Vintage Lounge (Bottom-right) -->
-        <article class="rounded-2xl card p-6" style="--accent:#ffd700; --bg:#29210e; background:var(--bg); border-color:var(--accent); border-width:1px;">
+        <article class="rounded-2xl card p-6" style="--accent: #ffd700; --bg: #29210e; background: var(--bg); border-color: var(--accent); border-width:1px;">
           <header class="mb-4">
-            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
-            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">Vintage Lounge</h3>
+            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">Playlist</span>
+            <h3 class="text-2xl font-extrabold mb-1 neon">Vintage Lounge</h3>
             <p class="text-white/80 mb-1">Warm, jazzy loops for retro, relaxed content.</p>
             <p class="italic text-white/50 mb-2">Gold standard for soft spoken & ASMR.</p>
           </header>
-          <div class="space-y-2">
-            <!-- 10 static rows -->
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 1</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop1.mp3" data-title="Vintage Lounge loop 1" aria-label="Play Vintage Lounge loop 1">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-1" href="#buy-vintage-1" aria-label="Buy Vintage Lounge loop 1 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 2</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop2.mp3" data-title="Vintage Lounge loop 2" aria-label="Play Vintage Lounge loop 2">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-2" href="#buy-vintage-2" aria-label="Buy Vintage Lounge loop 2 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 3</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop3.mp3" data-title="Vintage Lounge loop 3" aria-label="Play Vintage Lounge loop 3">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-3" href="#buy-vintage-3" aria-label="Buy Vintage Lounge loop 3 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 4</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop4.mp3" data-title="Vintage Lounge loop 4" aria-label="Play Vintage Lounge loop 4">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-4" href="#buy-vintage-4" aria-label="Buy Vintage Lounge loop 4 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 5</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop5.mp3" data-title="Vintage Lounge loop 5" aria-label="Play Vintage Lounge loop 5">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-5" href="#buy-vintage-5" aria-label="Buy Vintage Lounge loop 5 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 6</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop6.mp3" data-title="Vintage Lounge loop 6" aria-label="Play Vintage Lounge loop 6">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-6" href="#buy-vintage-6" aria-label="Buy Vintage Lounge loop 6 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 7</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop7.mp3" data-title="Vintage Lounge loop 7" aria-label="Play Vintage Lounge loop 7">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-7" href="#buy-vintage-7" aria-label="Buy Vintage Lounge loop 7 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 8</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop8.mp3" data-title="Vintage Lounge loop 8" aria-label="Play Vintage Lounge loop 8">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-8" href="#buy-vintage-8" aria-label="Buy Vintage Lounge loop 8 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 9</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop9.mp3" data-title="Vintage Lounge loop 9" aria-label="Play Vintage Lounge loop 9">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-9" href="#buy-vintage-9" aria-label="Buy Vintage Lounge loop 9 for $49">Buy $49</a></div></div>
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);"><span class="font-medium text-white">Vintage Lounge loop 10</span><div class="flex gap-2"><button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop10.mp3" data-title="Vintage Lounge loop 10" aria-label="Play Vintage Lounge loop 10">Play</button><a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-10" href="#buy-vintage-10" aria-label="Buy Vintage Lounge loop 10 for $49">Buy $49</a></div></div>
+
+          <div class="rows-viewport space-y-2" data-scrollable>
+            <div class="track-row rounded-lg px-3 py-2 flex items-center justify-between">
+              <span class="font-medium text-white track-title">VINTAGE LOUNGE LOOP 1</span>
+              <div class="flex gap-2">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold"
+                        data-src="/audio/vintage/loop1.mp3" data-title="VINTAGE LOUNGE LOOP 1" aria-label="Play VINTAGE LOUNGE LOOP 1">Play</button>
+                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold"
+                   data-sku="vintage-1" href="#buy-vintage-1" aria-label="Buy VINTAGE LOUNGE LOOP 1 for $49">Buy $49</a>
+              </div>
+            </div>
+            <script>
+              (function(){
+                const parent = document.currentScript.previousElementSibling.parentElement;
+                for (let i=2;i<=20;i++){
+                  const row = document.createElement('div');
+                  row.className = 'track-row rounded-lg px-3 py-2 flex items-center justify-between';
+                  row.innerHTML = `
+                    <span class="font-medium text-white track-title">VINTAGE LOUNGE LOOP ${i}</span>
+                    <div class="flex gap-2">
+                      <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold"
+                              data-src="/audio/vintage/loop${i}.mp3" data-title="VINTAGE LOUNGE LOOP ${i}" aria-label="Play VINTAGE LOUNGE LOOP ${i}">Play</button>
+                      <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold"
+                         data-sku="vintage-${i}" href="#buy-vintage-${i}" aria-label="Buy VINTAGE LOUNGE LOOP ${i} for $49">Buy $49</a>
+                    </div>`;
+                  parent.appendChild(row);
+                }
+              })();
+            </script>
+          </div>
+          <div class="mt-3">
+            <input class="slider" type="range" min="0" value="0" step="1" data-slider aria-label="Scroll Vintage Lounge playlist"/>
           </div>
         </article>
       </div>
@@ -449,7 +594,7 @@
     document.getElementById('nextTestimonials').addEventListener('click', () => { page = (page + 1) % 3; renderTestimonials(); });
     renderTestimonials();
 
-    // --- Spotify-like player ---
+    // --- Sticky player / global audio ---
     const audio = document.getElementById('audio');
     const bar = document.getElementById('playerBar');
     const titleEl = document.getElementById('playerTitle');
@@ -483,17 +628,22 @@
       loadAndPlay(src, title);
     }
 
-    document.querySelectorAll('.play-btn').forEach((btn) => {
-      const src = btn.getAttribute('data-src');
-      const title = btn.getAttribute('data-title');
-      const cover = btn.getAttribute('data-cover');
-      if(src) queue.push({src, title, cover});
-      btn.addEventListener('click', () => {
-        const i = queue.findIndex(t => t.src === src);
-        if(i === -1){ queue.push({src, title, cover}); playAt(queue.length-1); }
-        else { playAt(i); }
+    // collect play buttons (including dynamically created ones)
+    function wireButtons(scope=document){
+      scope.querySelectorAll('.play-btn').forEach((btn) => {
+        const src = btn.getAttribute('data-src');
+        const title = btn.getAttribute('data-title');
+        const cover = btn.getAttribute('data-cover');
+        if (!queue.find(t => t.src === src)) {
+          queue.push({src, title, cover});
+        }
+        btn.addEventListener('click', () => {
+          const i = queue.findIndex(t => t.src === src);
+          playAt(i);
+        });
       });
-    });
+    }
+    wireButtons();
 
     btnPlay.addEventListener('click', () => {
       if(audio.paused) { audio.play(); btnPlay.textContent = 'Pause'; }
@@ -509,9 +659,36 @@
     });
     seek.addEventListener('input', () => { audio.currentTime = seek.value; });
     vol.addEventListener('input', () => { audio.volume = vol.value; });
-
-    // Hide player when nothing loaded
     audio.addEventListener('ended', () => { btnPlay.textContent = 'Play'; });
+
+    // Re-wire after dynamic rows (the inline generators ran already)
+    wireButtons();
+
+    // --- Scroll slider binding for each playlist (maps range to scrollTop) ---
+    document.querySelectorAll('article .rows-viewport').forEach((vp) => {
+      const slider = vp.parentElement.querySelector('[data-slider]');
+      function syncSliderMax(){
+        const max = Math.max(0, vp.scrollHeight - vp.clientHeight);
+        slider.max = Math.ceil(max);
+      }
+      function sliderToScroll(){
+        vp.scrollTop = Number(slider.value);
+      }
+      function scrollToSlider(){
+        slider.value = Math.round(vp.scrollTop);
+      }
+      // Init
+      syncSliderMax();
+      scrollToSlider();
+
+      // Bind
+      slider.addEventListener('input', sliderToScroll);
+      vp.addEventListener('scroll', scrollToSlider);
+      // Recalc on resize / fonts
+      window.addEventListener('resize', syncSliderMax);
+      // slight delay to account for fonts rendering
+      setTimeout(syncSliderMax, 400);
+    });
   </script>
 </body>
 </html>
