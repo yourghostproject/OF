@@ -23,7 +23,7 @@
     /* Sticky Web Player (desktop) */
     #playerBar { transition: transform .3s ease; }
     #playerBar.hidden { transform: translateY(100%); }
-    /* Modal */  
+    /* Modal */
     .modal { display:none; }
     .modal.open { display:flex; }
   </style>
@@ -97,108 +97,177 @@
     </div>
   </section>
 
-  <!-- STORE: 2x2 Playlists Layout -->
-  <section id="store" class="bg-[#0e1116] py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- STORE: section color 1 -->
+  <section id="store" class="bg-[#0e1116]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="flex items-end justify-between gap-6">
         <div>
           <h2 class="text-3xl font-semibold">$49 Track Store (Non‑Exclusive)</h2>
-          <p class="text-white/70 mt-2">Pick your vibe. Pay $49 per track. Instant license + download. Royalty-free for your channel, including paid ads.</p>
-          <p class="text-white/70 mt-2">All tracks are delivered in perfect loops. They'll never cut off mid-scene. Download lengths from 5, 10, 20, or 30 minutes (plus the original version) so your content flows naturally.</p>
+          <p class="text-white/70 mt-2">Pick your vibe. Pay <span class="font-semibold text-white">$49</span> per track. Instant license + download. Royalty‑free for your channel, including paid ads.</p>
+          <p class="text-white/70 mt-2">All tracks are delivered as <span class="font-semibold text-white">perfect loops</span>. Download lengths of <span class="font-semibold text-white">5, 10, 20, or 30 minutes</span> (+ original) so your content flows naturally.</p>
           <p class="text-xs text-white/50 mt-1">Other creators may license the same track.</p>
         </div>
         <a href="#license" class="text-sm underline text-white/70 hover:text-white">License details</a>
       </div>
-      <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Smooth RnB (Top-left) -->
-        <article class="rounded-2xl card p-6" style="--accent: #6f4bb2; --bg: #241d2e; background: var(--bg); border-color: var(--accent); border-width:1px;">
-          <header class="mb-4">
-            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
-            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">Smooth RnB</h3>
-            <p class="text-white/80 mb-1">Silky keys for intimate, late night vibes.</p>
-            <p class="italic text-white/50 mb-2">Perfect for conversations & slow moments.</p>
+
+      <!-- Spotify-like Playlist Wrapper -->
+      <div class="mt-8 grid lg:grid-cols-3 gap-8">
+        <!-- Playlist card -->
+        <article class="paper rounded-2xl p-6 card">
+          <header class="flex items-center gap-4">
+            <img class="h-20 w-20 rounded-xl object-cover" alt="playlist cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='100%25' height='100%25' fill='%23111112'/%3E%3Crect x='16' y='16' width='168' height='168' rx='16' fill='%234B2142'/%3E%3C/svg%3E"/>
+            <div>
+              <p class="uppercase text-xs tracking-wide text-white/60">Playlist</p>
+              <h3 class="text-xl font-semibold one-line">The Halloween Special — Limited Edition</h3>
+              <p class="text-white/60 text-sm one-line">Seductive spooky vibes • Oct 1–31</p>
+            </div>
           </header>
-          <div class="space-y-2">
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
-              <span class="font-medium text-white">Smooth RnB loop 1</span>
-              <div class="flex gap-2">
-                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop1.mp3" data-title="Smooth RnB loop 1" aria-label="Play Smooth RnB loop 1">Play</button>
-                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-1" href="#buy-smoothrnb-1" aria-label="Buy Smooth RnB loop 1 for $49">Buy $49</a>
+          <div class="mt-4 flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-1 rounded pill">Spooky</span>
+            <span class="px-2 py-1 rounded pill">Club</span>
+            <span class="px-2 py-1 rounded pill">Dark</span>
+          </div>
+          <div class="mt-4 grid gap-2 text-sm">
+            <div class="grid tracks-grid items-center px-3 py-2 rounded-lg hover:bg-white/5">
+              <span class="text-white/40">1</span>
+              <div class="min-w-0">
+                <p class="one-line font-medium">Midnight Velvet 01</p>
+                <p class="one-line text-white/50 text-xs">Preview • 128k</p>
+              </div>
+              <span class="hide-sm text-white/60">Moody</span>
+              <span class="text-white/60">3:12</span>
+              <div class="flex justify-end">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/midnight-velvet-01.mp3" data-title="Midnight Velvet 01">Play</button>
               </div>
             </div>
-            <!-- Repeat for loops 2-10 -->
-            <!-- Each track follows same pattern but with incrementing numbers -->
-            <!-- Loop 10 shown as example -->
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
-              <span class="font-medium text-white">Smooth RnB loop 10</span>
-              <div class="flex gap-2">
-                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop10.mp3" data-title="Smooth RnB loop 10" aria-label="Play Smooth RnB loop 10">Play</button>
-                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-10" href="#buy-smoothrnb-10" aria-label="Buy Smooth RnB loop 10 for $49">Buy $49</a>
+            <div class="grid tracks-grid items-center px-3 py-2 rounded-lg hover:bg-white/5">
+              <span class="text-white/40">2</span>
+              <div class="min-w-0">
+                <p class="one-line font-medium">Witching Hour 02</p>
+                <p class="one-line text-white/50 text-xs">Preview • 128k</p>
+              </div>
+              <span class="hide-sm text-white/60">Tense</span>
+              <span class="text-white/60">3:26</span>
+              <div class="flex justify-end">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/witching-hour-02.mp3" data-title="Witching Hour 02">Play</button>
+              </div>
+            </div>
+            <div class="grid tracks-grid items-center px-3 py-2 rounded-lg hover:bg-white/5">
+              <span class="text-white/40">3</span>
+              <div class="min-w-0">
+                <p class="one-line font-medium">Silk & Shadows 03</p>
+                <p class="one-line text-white/50 text-xs">Preview • 128k</p>
+              </div>
+              <span class="hide-sm text-white/60">Seductive</span>
+              <span class="text-white/60">3:05</span>
+              <div class="flex justify-end">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/silk-shadows-03.mp3" data-title="Silk & Shadows 03">Play</button>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex items-center justify-between gap-4 flex-wrap">
+            <a href="#checkout-bundle" class="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">Get 3 for $119 • 5 for $199</a>
+            <p class="text-xs text-white/50">Non‑exclusive • Ad‑safe • Instant</p>
+          </div>
+        </article>
+
+        <!-- Smooth RnB -->
+        <article class="paper rounded-2xl p-6 card">
+          <header class="flex items-center gap-4">
+            <img class="h-20 w-20 rounded-xl object-cover" alt="cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='100%25' height='100%25' fill='%23111112'/%3E%3Crect x='16' y='16' width='168' height='168' rx='16' fill='%231a2b4b'/%3E%3C/svg%3E"/>
+            <div>
+              <p class="uppercase text-xs tracking-wide text-white/60">Playlist</p>
+              <h3 class="text-xl font-semibold one-line">Smooth RnB — conversations & intimate moments</h3>
+              <p class="text-white/60 text-sm one-line">Silky keys, slow‑bounce grooves</p>
+            </div>
+          </header>
+          <div class="mt-4 grid gap-2 text-sm">
+            <div class="grid tracks-grid items-center px-3 py-2 rounded-lg hover:bg-white/5">
+              <span class="text-white/40">1</span>
+              <div class="min-w-0">
+                <p class="one-line font-medium">Velvet Talk 01</p>
+                <p class="one-line text-white/50 text-xs">Preview • 128k</p>
+              </div>
+              <span class="hide-sm text-white/60">Warm</span>
+              <span class="text-white/60">3:18</span>
+              <div class="flex justify-end">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/velvet-talk-01.mp3" data-title="Velvet Talk 01">Play</button>
+              </div>
+            </div>
+            <div class="grid tracks-grid items-center px-3 py-2 rounded-lg hover:bg-white/5">
+              <span class="text-white/40">2</span>
+              <div class="min-w-0">
+                <p class="one-line font-medium">Afterglow 02</p>
+                <p class="one-line text-white/50 text-xs">Preview • 128k</p>
+              </div>
+              <span class="hide-sm text-white/60">Soft</span>
+              <span class="text-white/60">3:22</span>
+              <div class="flex justify-end">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/afterglow-02.mp3" data-title="Afterglow 02">Play</button>
+              </div>
+            </div>
+            <div class="grid tracks-grid items-center px-3 py-2 rounded-lg hover:bg-white/5">
+              <span class="text-white/40">3</span>
+              <div class="min-w-0">
+                <p class="one-line font-medium">Silk Whisper 03</p>
+                <p class="one-line text-white/50 text-xs">Preview • 128k</p>
+              </div>
+              <span class="hide-sm text-white/60">Lush</span>
+              <span class="text-white/60">3:09</span>
+              <div class="flex justify-end">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/silk-whisper-03.mp3" data-title="Silk Whisper 03">Play</button>
               </div>
             </div>
           </div>
         </article>
 
-        <!-- Halloween — Limited Edition (Top-right) -->
-        <article class="rounded-2xl card p-6" style="--accent: #ff8300; --bg: #251a10; background: var(--bg); border-color: var(--accent); border-width:1px;">
-          <header class="mb-4">
-            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
-            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">Halloween — Limited Edition</h3>
-            <p class="text-white/80 mb-1">Seductive spooky beats for October.</p>
-            <p class="italic text-white/50 mb-2">Limited vibes • Only Oct 1–31.</p>
+        <!-- HEAT -->
+        <article class="paper rounded-2xl p-6 card">
+          <header class="flex items-center gap-4">
+            <img class="h-20 w-20 rounded-xl object-cover" alt="cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='100%25' height='100%25' fill='%23111112'/%3E%3Crect x='16' y='16' width='168' height='168' rx='16' fill='%230f2a1a'/%3E%3C/svg%3E"/>
+            <div>
+              <p class="uppercase text-xs tracking-wide text-white/60">Playlist</p>
+              <h3 class="text-xl font-semibold one-line">HEAT — body‑moving clips</h3>
+              <p class="text-white/60 text-sm one-line">Hard‑hitting 808s, crisp hats</p>
+            </div>
           </header>
-          <div class="space-y-2">
-            <!-- 10 Halloween tracks -->
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
-              <span class="font-medium text-white">Halloween loop 1</span>
-              <div class="flex gap-2">
-                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop1.mp3" data-title="Halloween loop 1" aria-label="Play Halloween loop 1">Play</button>
-                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-1" href="#buy-halloween-1" aria-label="Buy Halloween loop 1 for $49">Buy $49</a>
+          <div class="mt-4 grid gap-2 text-sm">
+            <div class="grid tracks-grid items-center px-3 py-2 rounded-lg hover:bg-white/5">
+              <span class="text-white/40">1</span>
+              <div class="min-w-0">
+                <p class="one-line font-medium">Bounce Check 01</p>
+                <p class="one-line text-white/50 text-xs">Preview • 128k</p>
+              </div>
+              <span class="hide-sm text-white/60">Hype</span>
+              <span class="text-white/60">2:58</span>
+              <div class="flex justify-end">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/bounce-check-01.mp3" data-title="Bounce Check 01">Play</button>
               </div>
             </div>
-            <!-- Repeat for loops 2-10 -->
-          </div>
-        </article>
-
-        <!-- HEAT (Bottom-left) -->
-        <article class="rounded-2xl card p-6" style="--accent: #e23c3c; --bg: #241313; background: var(--bg); border-color: var(--accent); border-width:1px;">
-          <header class="mb-4">
-            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
-            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">HEAT</h3>
-            <p class="text-white/80 mb-1">Hard-hitting 808s, crisp hats, energetic club beats.</p>
-            <p class="italic text-white/50 mb-2">Perfect for body‑moving clips & shorts.</p>
-          </header>
-          <div class="space-y-2">
-            <!-- 10 HEAT tracks -->
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
-              <span class="font-medium text-white">HEAT loop 1</span>
-              <div class="flex gap-2">
-                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop1.mp3" data-title="HEAT loop 1" aria-label="Play HEAT loop 1">Play</button>
-                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-1" href="#buy-heat-1" aria-label="Buy HEAT loop 1 for $49">Buy $49</a>
+            <div class="grid tracks-grid items-center px-3 py-2 rounded-lg hover:bg-white/5">
+              <span class="text-white/40">2</span>
+              <div class="min-w-0">
+                <p class="one-line font-medium">Club Heat 02</p>
+                <p class="one-line text-white/50 text-xs">Preview • 128k</p>
+              </div>
+              <span class="hide-sm text-white/60">Bounce</span>
+              <span class="text-white/60">3:01</span>
+              <div class="flex justify-end">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/club-heat-02.mp3" data-title="Club Heat 02">Play</button>
               </div>
             </div>
-            <!-- Repeat for loops 2-10 -->
-          </div>
-        </article>
-
-        <!-- Vintage Lounge (Bottom-right) -->
-        <article class="rounded-2xl card p-6" style="--accent: #ffd700; --bg: #29210e; background: var(--bg); border-color: var(--accent); border-width:1px;">
-          <header class="mb-4">
-            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
-            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">Vintage Lounge</h3>
-            <p class="text-white/80 mb-1">Warm, jazzy loops for retro, relaxed content.</p>
-            <p class="italic text-white/50 mb-2">Gold standard for soft spoken & ASMR.</p>
-          </header>
-          <div class="space-y-2">
-            <!-- 10 Vintage tracks -->
-            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
-              <span class="font-medium text-white">Vintage Lounge loop 1</span>
-              <div class="flex gap-2">
-                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop1.mp3" data-title="Vintage Lounge loop 1" aria-label="Play Vintage Lounge loop 1">Play</button>
-                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-1" href="#buy-vintage-1" aria-label="Buy Vintage Lounge loop 1 for $49">Buy $49</a>
+            <div class="grid tracks-grid items-center px-3 py-2 rounded-lg hover:bg-white/5">
+              <span class="text-white/40">3</span>
+              <div class="min-w-0">
+                <p class="one-line font-medium">Level Up 03</p>
+                <p class="one-line text-white/50 text-xs">Preview • 128k</p>
+              </div>
+              <span class="hide-sm text-white/60">Club</span>
+              <span class="text-white/60">3:15</span>
+              <div class="flex justify-end">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/level-up-03.mp3" data-title="Level Up 03">Play</button>
               </div>
             </div>
-            <!-- Repeat for loops 2-10 -->
           </div>
         </article>
       </div>
@@ -288,8 +357,8 @@
       <div class="flex items-center justify-between">
         <h2 class="text-3xl font-semibold">What Creators Say</h2>
         <div class="flex items-center gap-2">
-          <button id="prevTestimonials" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20">←</button>
-          <button id="nextTestimonials" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20">→</button>
+          <button id="prevTestimonials" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20">◀</button>
+          <button id="nextTestimonials" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20">▶</button>
         </div>
       </div>
       <div id="testimonialContainer" class="mt-6 grid md:grid-cols-3 gap-6"></div>
@@ -345,4 +414,170 @@
       <div class="glass rounded-2xl p-8 card">
         <h2 class="text-3xl font-semibold">Ask me a question</h2>
         <p class="text-white/70 mt-2">Not sure what vibe you need? Ask me anything — I usually reply within 12–24 hours.</p>
-        <form class="mt-
+        <form class="mt-6 grid gap-4" action="https://formspree.io/f/your-id" method="POST">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <input required name="name" placeholder="Name" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10" />
+            <input required type="email" name="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10" />
+          </div>
+          <input name="handle" placeholder="Creator handle (OnlyFans/IG/TikTok)" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10" />
+          <textarea name="question" placeholder="Your question…" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 min-h-[140px]"></textarea>
+          <button class="justify-self-start px-6 py-3 rounded-xl bg-white text-black font-semibold">Send</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 bg-black">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/60">
+      <p>© <span id="year"></span> Your Ghost Project. All rights reserved.</p>
+      <div class="flex items-center gap-6">
+        <a href="#license" class="hover:text-white">License Terms</a>
+        <a href="#contact" class="hover:text-white">Contact</a>
+        <a href="#" class="hover:text-white">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Booking Modal -->
+  <div id="bookingModal" class="modal fixed inset-0 z-50 items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/70"></div>
+    <div class="relative max-w-xl w-full mx-auto glass rounded-2xl p-6 card">
+      <div class="flex items-center justify-between">
+        <h3 class="text-2xl font-semibold">Book an Exclusive Custom Track</h3>
+        <button id="closeBooking" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20">✕</button>
+      </div>
+      <p class="text-white/70 mt-1">Tell me what you need and I’ll get back within 12–24 hours.</p>
+      <form id="bookingForm" class="mt-6 grid gap-4" action="https://formspree.io/f/your-id" method="POST">
+        <input type="hidden" name="package" id="bookingPackage" value="" />
+        <div class="grid sm:grid-cols-2 gap-4">
+          <input required name="name" placeholder="Name" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10" />
+          <input required type="email" name="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10" />
+        </div>
+        <input name="handle" placeholder="Creator handle (OnlyFans/IG/TikTok)" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10" />
+        <textarea name="message" placeholder="Describe the vibe, tempo, references, where it will be used, etc." class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 min-h-[140px]"></textarea>
+        <button class="justify-self-start px-6 py-3 rounded-xl bg-white text-black font-semibold">Send Request</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Analytics helper
+    function track(event, payload = {}){
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({event, ...payload});
+      try{ console.log('event:', event, payload);}catch(e){}
+    }
+
+    // --- Booking modal logic ---
+    const modal = document.getElementById('bookingModal');
+    const closeBooking = document.getElementById('closeBooking');
+    const packageInput = document.getElementById('bookingPackage');
+    document.querySelectorAll('.open-booking').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pack = btn.getAttribute('data-package');
+        packageInput.value = pack;
+        modal.classList.add('open');
+        track('book_custom_click', { package: pack });
+      });
+    });
+    closeBooking.addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('open'); });
+
+    // --- Testimonials ---
+    const testimonials = [
+      { quote: "No more copyright flags. I dropped the track in and uploaded — clean on the first try.", author: "— Ava • Fitness Creator" },
+      { quote: "I wanted sexy but not cheesy. He nailed the tone and the loop just… works.", author: "— Leo • Cosplay" },
+      { quote: "The 20‑minute loop saved me so much editing time. My fans noticed the vibe immediately.", author: "— Mira • Model" },
+      { quote: "I booked a custom and got a theme that actually sounds like me. Worth every dollar.", author: "— Juno • Creator" },
+      { quote: "I was nervous about DMCA. Zero issues so far and I post daily.", author: "— Sam • Daily Posters" },
+      { quote: "He replied same day, asked smart questions, and delivered in under 48 hours.", author: "— Val • Content Creator" },
+      { quote: "The low end is clean on phone speakers. That’s rare and it matters.", author: "— Ren • Dancer" },
+      { quote: "Bought the bundle — variety without losing the brand feel.", author: "— K • Creator/Streamer" },
+      { quote: "I’ve tried libraries. This feels made for my page, not generic stock.", author: "— Naya • Premium Creator" },
+    ];
+    const container = document.getElementById('testimonialContainer');
+    const tpl = document.getElementById('testimonialTemplate');
+    let page = 0; // 0..2 (3 pages of 3)
+    function renderTestimonials(){
+      container.innerHTML = '';
+      const start = page * 3;
+      testimonials.slice(start, start+3).forEach(t => {
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('blockquote').textContent = '“' + t.quote + '”';
+        node.querySelector('figcaption').textContent = t.author;
+        container.appendChild(node);
+      });
+    }
+    document.getElementById('prevTestimonials').addEventListener('click', () => { page = (page + 2) % 3; renderTestimonials(); });
+    document.getElementById('nextTestimonials').addEventListener('click', () => { page = (page + 1) % 3; renderTestimonials(); });
+    renderTestimonials();
+
+    // --- Spotify-like player ---
+    const audio = document.getElementById('audio');
+    const bar = document.getElementById('playerBar');
+    const titleEl = document.getElementById('playerTitle');
+    const metaEl = document.getElementById('playerMeta');
+    const coverEl = document.getElementById('playerCover');
+    const btnPlay = document.getElementById('btnPlay');
+    const btnNext = document.getElementById('btnNext');
+    const btnPrev = document.getElementById('btnPrev');
+    const seek = document.getElementById('seek');
+    const vol = document.getElementById('vol');
+
+    let queue = [];
+    let index = -1;
+
+    function loadAndPlay(src, title){
+      if(!src) return;
+      if(bar.classList.contains('hidden')) bar.classList.remove('hidden');
+      audio.src = src;
+      titleEl.textContent = title || 'Preview';
+      metaEl.textContent = 'Preview • 128k MP3';
+      audio.play();
+      btnPlay.textContent = 'Pause';
+      track('audio_preview_play', { title });
+    }
+
+    function playAt(i){
+      if(i < 0 || i >= queue.length) return;
+      index = i;
+      const {src, title, cover} = queue[index];
+      if(cover) coverEl.src = cover;
+      loadAndPlay(src, title);
+    }
+
+    document.querySelectorAll('.play-btn').forEach((btn) => {
+      const src = btn.getAttribute('data-src');
+      const title = btn.getAttribute('data-title');
+      const cover = btn.getAttribute('data-cover');
+      queue.push({src, title, cover});
+      btn.addEventListener('click', () => {
+        const i = queue.findIndex(t => t.src === src);
+        playAt(i);
+      });
+    });
+
+    btnPlay.addEventListener('click', () => {
+      if(audio.paused) { audio.play(); btnPlay.textContent = 'Pause'; }
+      else { audio.pause(); btnPlay.textContent = 'Play'; }
+    });
+
+    btnNext.addEventListener('click', () => { if(queue.length){ playAt((index+1)%queue.length); } });
+    btnPrev.addEventListener('click', () => { if(queue.length){ playAt((index-1+queue.length)%queue.length); } });
+
+    audio.addEventListener('timeupdate', () => {
+      if(audio.duration) seek.max = audio.duration;
+      seek.value = audio.currentTime || 0;
+    });
+    seek.addEventListener('input', () => { audio.currentTime = seek.value; });
+    vol.addEventListener('input', () => { audio.volume = vol.value; });
+
+    // Hide player when nothing loaded
+    audio.addEventListener('ended', () => { btnPlay.textContent = 'Play'; });
+  </script>
+</body>
+</html>
