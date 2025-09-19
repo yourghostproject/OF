@@ -1,42 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Ghost Project</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Custom Music for OnlyFans Creators | Your Ghost Project</title>
+  <meta name="description" content="Custom and pre-licensed sexy instrumentals made specifically for OnlyFans creators. $49 non‑exclusive tracks (ad‑safe) or exclusive custom beats with 24–72h delivery. No ContentID claims." />
+  <meta name="theme-color" content="#4B2142" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ---- Visual system ---- */
+    .grad-dark { background: radial-gradient(800px 300px at 10% 10%, #F6E7EB10, transparent), linear-gradient(135deg,#4B2142 0%, #0b0b0c 40%, #000 100%); }
+    .grad-purple { background: radial-gradient(600px 240px at 80% 20%, #4B214230, transparent), linear-gradient(135deg,#1a0f1c 0%, #0f0d16 100%); }
+    .paper { background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03)); border: 1px solid rgba(255,255,255,0.08); }
+    .glass { backdrop-filter: blur(10px); background: rgba(255,255,255,0.06); }
+    .card { border: 1px solid rgba(255,255,255,0.08); }
+    .one-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pill { border: 1px solid rgba(255,255,255,0.12); }
+    /* Spotify-like table */
+    .tracks-grid { grid-template-columns: 32px 1fr 120px 88px 88px; }
+    @media (max-width: 640px){ .tracks-grid { grid-template-columns: 28px 1fr 70px 70px; } .hide-sm { display:none; } }
+    /* Sticky Web Player (desktop) */
+    #playerBar { transition: transform .3s ease; }
+    #playerBar.hidden { transform: translateY(100%); }
+    /* Modal */  
+    .modal { display:none; }
+    .modal.open { display:flex; }
+  </style>
 </head>
-<body>
-    <!-- Other sections remain unchanged -->
-    <section id="store">
-        <h2>Our Products</h2>
-        <div class="grid-container">
-            <div class="card">
-                <h3>Product 1</h3>
-                <p>Description for product 1.</p>
-                <button class="play-btn">Play</button>
-            </div>
-            <div class="card">
-                <h3>Product 2</h3>
-                <p>Description for product 2.</p>
-                <button class="play-btn">Play</button>
-            </div>
-            <div class="card">
-                <h3>Product 3</h3>
-                <p>Description for product 3.</p>
-                <button class="play-btn">Play</button>
-            </div>
-            <div class="card">
-                <h3>Product 4</h3>
-                <p>Description for product 4.</p>
-                <button class="play-btn">Play</button>
-            </div>
+<body class="bg-[#0b0b0c] text-white antialiased">
+  <!-- Mobile sticky CTAs -->
+  <div class="fixed bottom-0 inset-x-0 z-50 md:hidden">
+    <div class="flex gap-3 p-3 bg-[#111111]/90 backdrop-blur">
+      <a href="#store" class="flex-1 text-center py-3 rounded-xl bg-white text-black font-semibold">Shop $49 Tracks</a>
+      <a href="#custom" class="flex-1 text-center py-3 rounded-xl bg-[#4B2142] font-semibold">Book Custom</a>
+    </div>
+  </div>
+
+  <!-- Desktop sticky player (above footer) -->
+  <div id="playerBar" class="hidden md:flex fixed bottom-0 inset-x-0 z-40 bg-[#0f0f10]/95 backdrop-blur border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-4">
+      <img id="playerCover" alt="cover" class="h-10 w-10 rounded object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='100%25' height='100%25' fill='%234B2142'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' fill='%23fff' font-family='Arial' font-size='14'%3EYGP%3C/text%3E%3C/svg%3E" />
+      <div class="min-w-0">
+        <p id="playerTitle" class="text-sm font-medium one-line">—</p>
+        <p id="playerMeta" class="text-xs text-white/60 one-line">Preview • 128k MP3</p>
+      </div>
+      <div class="flex items-center gap-3 ml-auto">
+        <button id="btnPrev" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20">⏮</button>
+        <button id="btnPlay" class="px-4 py-2 rounded-lg bg-white text-black font-semibold">Play</button>
+        <button id="btnNext" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20">⏭</button>
+        <input id="seek" type="range" min="0" value="0" step="0.01" class="w-40"/>
+        <input id="vol" type="range" min="0" max="1" step="0.01" value="0.9" class="w-24"/>
+      </div>
+      <audio id="audio"></audio>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-black/40 backdrop-blur border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl bg-[#4B2142] grid place-items-center font-bold">YGP</div>
+        <div>
+          <p class="text-sm tracking-wider uppercase text-white/70">Your Ghost Project</p>
+          <p class="text-xs text-white/50">Signature beats for <span class="font-semibold text-white">ONLYFANS</span> creators</p>
         </div>
-        <div class="bundle-upsell">
-            <h3>Bundle Offer</h3>
-            <p>Get all products at a discounted price!</p>
+      </div>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#store" class="hover:text-[#F6E7EB]">Track Store</a>
+        <a href="#custom" class="hover:text-[#F6E7EB]">Exclusive Track</a>
+        <a href="#whyme" class="hover:text-[#F6E7EB]">Why me?</a>
+        <a href="#faq" class="hover:text-[#F6E7EB]">FAQ</a>
+        <a href="#contact" class="px-4 py-2 rounded-xl bg-white text-black font-semibold">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="grad-dark">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+      <div class="max-w-3xl">
+        <h1 class="text-4xl sm:text-5xl font-semibold leading-tight">The Exclusive <span class="text-[#F6E7EB]">Music Service</span><br/>for <span class="underline decoration-[#F6E7EB]/40 underline-offset-4">ONLYFANS</span> Creators</h1>
+        <p class="mt-5 text-white/80 text-lg">Engaging, modern, and copyright-safe instrumentals designed for your brand — <span class="font-semibold text-white">without ContentID headaches</span>. Built for premium OnlyFans creators.</p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="#store" class="px-6 py-3 rounded-xl bg-white text-black font-semibold">Shop Single Tracks — $49</a>
+          <a href="#custom" class="px-6 py-3 rounded-xl bg-[#4B2142] font-semibold">Get Tailor‑Made Exclusive — from $199</a>
         </div>
-    </section>
-    <!-- Other sections remain unchanged -->
-</body>
-</html>
+        <ul class="mt-6 flex flex-wrap gap-3 text-xs text-white/70">
+          <li class="px-3 py-1 rounded-full glass">DMCA‑Safe</li>
+          <li class="px-3 py-1 rounded-full glass">One‑Creator License</li>
+          <li class="px-3 py-1 rounded-full glass">WAV/MP3 Included</li>
+          <li class="px-3 py-1 rounded-full glass">48h Turnaround</li>
+          <li class="px-3 py-1 rounded-full glass">Ad‑Safe</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORE: 2x2 Playlists Layout -->
+  <section id="store" class="bg-[#0e1116] py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between gap-6">
+        <div>
+          <h2 class="text-3xl font-semibold">$49 Track Store (Non‑Exclusive)</h2>
+          <p class="text-white/70 mt-2">Pick your vibe. Pay $49 per track. Instant license + download. Royalty-free for your channel, including paid ads.</p>
+          <p class="text-white/70 mt-2">All tracks are delivered in perfect loops. They'll never cut off mid-scene. Download lengths from 5, 10, 20, or 30 minutes (plus the original version) so your content flows naturally.</p>
+          <p class="text-xs text-white/50 mt-1">Other creators may license the same track.</p>
+        </div>
+        <a href="#license" class="text-sm underline text-white/70 hover:text-white">License details</a>
+      </div>
+      <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Smooth RnB (Top-left) -->
+        <article class="rounded-2xl card p-6" style="--accent: #6f4bb2; --bg: #241d2e; background: var(--bg); border-color: var(--accent); border-width:1px;">
+          <header class="mb-4">
+            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
+            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">Smooth RnB</h3>
+            <p class="text-white/80 mb-1">Silky keys for intimate, late night vibes.</p>
+            <p class="italic text-white/50 mb-2">Perfect for conversations & slow moments.</p>
+          </header>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
+              <span class="font-medium text-white">Smooth RnB loop 1</span>
+              <div class="flex gap-2">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop1.mp3" data-title="Smooth RnB loop 1" aria-label="Play Smooth RnB loop 1">Play</button>
+                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-1" href="#buy-smoothrnb-1" aria-label="Buy Smooth RnB loop 1 for $49">Buy $49</a>
+              </div>
+            </div>
+            <!-- Repeat for loops 2-10 -->
+            <!-- Each track follows same pattern but with incrementing numbers -->
+            <!-- Loop 10 shown as example -->
+            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
+              <span class="font-medium text-white">Smooth RnB loop 10</span>
+              <div class="flex gap-2">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/smoothrnb/loop10.mp3" data-title="Smooth RnB loop 10" aria-label="Play Smooth RnB loop 10">Play</button>
+                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="smoothrnb-10" href="#buy-smoothrnb-10" aria-label="Buy Smooth RnB loop 10 for $49">Buy $49</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Halloween — Limited Edition (Top-right) -->
+        <article class="rounded-2xl card p-6" style="--accent: #ff8300; --bg: #251a10; background: var(--bg); border-color: var(--accent); border-width:1px;">
+          <header class="mb-4">
+            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
+            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">Halloween — Limited Edition</h3>
+            <p class="text-white/80 mb-1">Seductive spooky beats for October.</p>
+            <p class="italic text-white/50 mb-2">Limited vibes • Only Oct 1–31.</p>
+          </header>
+          <div class="space-y-2">
+            <!-- 10 Halloween tracks -->
+            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
+              <span class="font-medium text-white">Halloween loop 1</span>
+              <div class="flex gap-2">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/halloween/loop1.mp3" data-title="Halloween loop 1" aria-label="Play Halloween loop 1">Play</button>
+                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="halloween-1" href="#buy-halloween-1" aria-label="Buy Halloween loop 1 for $49">Buy $49</a>
+              </div>
+            </div>
+            <!-- Repeat for loops 2-10 -->
+          </div>
+        </article>
+
+        <!-- HEAT (Bottom-left) -->
+        <article class="rounded-2xl card p-6" style="--accent: #e23c3c; --bg: #241313; background: var(--bg); border-color: var(--accent); border-width:1px;">
+          <header class="mb-4">
+            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
+            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">HEAT</h3>
+            <p class="text-white/80 mb-1">Hard-hitting 808s, crisp hats, energetic club beats.</p>
+            <p class="italic text-white/50 mb-2">Perfect for body‑moving clips & shorts.</p>
+          </header>
+          <div class="space-y-2">
+            <!-- 10 HEAT tracks -->
+            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
+              <span class="font-medium text-white">HEAT loop 1</span>
+              <div class="flex gap-2">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/heat/loop1.mp3" data-title="HEAT loop 1" aria-label="Play HEAT loop 1">Play</button>
+                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="heat-1" href="#buy-heat-1" aria-label="Buy HEAT loop 1 for $49">Buy $49</a>
+              </div>
+            </div>
+            <!-- Repeat for loops 2-10 -->
+          </div>
+        </article>
+
+        <!-- Vintage Lounge (Bottom-right) -->
+        <article class="rounded-2xl card p-6" style="--accent: #ffd700; --bg: #29210e; background: var(--bg); border-color: var(--accent); border-width:1px;">
+          <header class="mb-4">
+            <span class="uppercase text-xs tracking-wide text-white/70 mb-1 block">PLAYLIST</span>
+            <h3 class="text-xl font-bold mb-1" style="color:var(--accent)">Vintage Lounge</h3>
+            <p class="text-white/80 mb-1">Warm, jazzy loops for retro, relaxed content.</p>
+            <p class="italic text-white/50 mb-2">Gold standard for soft spoken & ASMR.</p>
+          </header>
+          <div class="space-y-2">
+            <!-- 10 Vintage tracks -->
+            <div class="flex items-center justify-between rounded-lg px-3 py-2" style="border:1px solid var(--accent);">
+              <span class="font-medium text-white">Vintage Lounge loop 1</span>
+              <div class="flex gap-2">
+                <button class="play-btn px-3 py-1 rounded bg-white text-black font-semibold" data-src="/audio/vintage/loop1.mp3" data-title="Vintage Lounge loop 1" aria-label="Play Vintage Lounge loop 1">Play</button>
+                <a class="px-3 py-1 rounded bg-[var(--accent)] text-white font-semibold" data-sku="vintage-1" href="#buy-vintage-1" aria-label="Buy Vintage Lounge loop 1 for $49">Buy $49</a>
+              </div>
+            </div>
+            <!-- Repeat for loops 2-10 -->
+          </div>
+        </article>
+      </div>
+
+      <!-- Bundle Upsell -->
+      <div class="mt-10 glass rounded-2xl p-6 card flex items-center justify-between flex-col md:flex-row gap-4">
+        <div>
+          <h3 class="text-xl font-semibold">Creator Bundle — 3 tracks for $119 • 5 tracks for $199</h3>
+          <p class="text-white/70 text-sm mt-1">Save more when you mix & match across playlists. Non‑exclusive, ad‑safe, unlimited usage on your channels.</p>
+        </div>
+        <a href="#checkout-bundle" class="px-5 py-3 rounded-xl bg-white text-black font-semibold">Choose Bundle</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOM: section color 2 -->
+  <section id="custom" class="grad-purple">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid lg:grid-cols-3 gap-10 items-start">
+        <div class="lg:col-span-2">
+          <h2 class="text-3xl font-semibold">Exclusive Custom Track (Only You)</h2>
+          <p class="text-white/70 mt-2">Get a signature sound crafted for YOUR content. <span class="text-white font-semibold">Only you will have access</span> — exclusive license, ad‑safe, and cleared for fan platforms + social.</p>
+          <ul class="mt-6 grid sm:grid-cols-3 gap-4">
+            <li class="card rounded-2xl p-5 bg-white/5">
+              <p class="font-semibold">1 custom track</p>
+              <p class="text-sm text-white/70">Loopable instrumental</p>
+              <p class="mt-3 text-2xl font-bold">$199</p>
+              <p class="text-xs text-white/60 mt-1">24h turnaround • 1 revision</p>
+              <button data-package="1-track" class="mt-4 inline-block px-4 py-2 rounded-lg bg-white text-black font-semibold open-booking">Book Now</button>
+            </li>
+            <li class="card rounded-2xl p-5 bg-white/5">
+              <p class="font-semibold">3 custom tracks</p>
+              <p class="text-sm text-white/70">Loopable instrumentals</p>
+              <p class="mt-3 text-2xl font-bold">$499</p>
+              <p class="text-xs text-white/60 mt-1">48h turnaround • 2 revisions total</p>
+              <button data-package="3-tracks" class="mt-4 inline-block px-4 py-2 rounded-lg bg-white text-black font-semibold open-booking">Book Now</button>
+            </li>
+            <li class="card rounded-2xl p-5 bg-white/5">
+              <p class="font-semibold">5 custom tracks</p>
+              <p class="text-sm text-white/70">Loopable instrumentals</p>
+              <p class="mt-3 text-2xl font-bold">$799</p>
+              <p class="text-xs text-white/60 mt-1">72h turnaround • 3 revisions total</p>
+              <button data-package="5-tracks" class="mt-4 inline-block px-4 py-2 rounded-lg bg-white text-black font-semibold open-booking">Book Now</button>
+            </li>
+          </ul>
+          <p class="text-xs text-white/60 mt-4">Stems available on request. No ContentID claims. Usage cleared for OnlyFans, Instagram, TikTok, YouTube.</p>
+        </div>
+        <div class="glass rounded-2xl p-6 card">
+          <h3 class="text-xl font-semibold">How I work</h3>
+          <ul class="mt-4 space-y-3 text-white/80">
+            <li>✅ <span class="font-medium">100% Original</span> — no samples that need clearance.</li>
+            <li>✅ <span class="font-medium">Fast & Discreet</span> — 24–72h delivery, creator‑first workflow.</li>
+            <li>✅ <span class="font-medium">Endlessly Loopable</span> — tempos/arrangements designed for engagement.</li>
+            <li>✅ <span class="font-medium">Ad‑Safe by Default</span> — use across posts, stories, shorts, and paid ads.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY ME: section color 3 -->
+  <section id="whyme" class="bg-[#0b0c0e]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="card rounded-2xl p-6 paper">
+          <p class="text-sm uppercase tracking-wider text-white/60">Built for</p>
+          <h3 class="text-xl font-semibold mt-1">ONLYFANS First</h3>
+          <p class="text-white/70 mt-2">Everything from licensing to file delivery is tailored to OnlyFans creator workflows and cross‑posting.</p>
+        </div>
+        <div class="card rounded-2xl p-6 paper">
+          <p class="text-sm uppercase tracking-wider text-white/60">No headaches</p>
+          <h3 class="text-xl font-semibold mt-1">No ContentID Claims</h3>
+          <p class="text-white/70 mt-2">I keep these releases out of public ContentID systems so your uploads stay clean.</p>
+        </div>
+        <div class="card rounded-2xl p-6 paper">
+          <p class="text-sm uppercase tracking-wider text-white/60">Outcomes</p>
+          <h3 class="text-xl font-semibold mt-1">Music That Converts</h3>
+          <p class="text-white/70 mt-2">I compose with creator metrics in mind — retention, tips, and brand feel.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS: section color 4 -->
+  <section class="bg-[#0f1217]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="flex items-center justify-between">
+        <h2 class="text-3xl font-semibold">What Creators Say</h2>
+        <div class="flex items-center gap-2">
+          <button id="prevTestimonials" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20">←</button>
+          <button id="nextTestimonials" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20">→</button>
+        </div>
+      </div>
+      <div id="testimonialContainer" class="mt-6 grid md:grid-cols-3 gap-6"></div>
+      <template id="testimonialTemplate">
+        <figure class="card rounded-2xl p-6 paper">
+          <blockquote class="text-white/80"></blockquote>
+          <figcaption class="text-sm text-white/50 mt-3"></figcaption>
+        </figure>
+      </template>
+    </div>
+  </section>
+
+  <!-- FAQ + LICENSE: section color 5 -->
+  <section id="faq" class="bg-[#0a0c0f]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <h2 class="text-3xl font-semibold">FAQ</h2>
+      <div class="mt-6 divide-y divide-white/10">
+        <details class="group py-4">
+          <summary class="flex items-center justify-between cursor-pointer"><span class="font-medium">Can I use $49 tracks on OnlyFans, IG, TikTok, and YouTube?</span><span class="text-white/50 group-open:rotate-180 transition">⌄</span></summary>
+          <p class="text-white/70 mt-3">Yes. One‑creator, non‑exclusive license with unlimited usage across your owned channels — including paid ads. Other creators may license the same track.</p>
+        </details>
+        <details class="group py-4">
+          <summary class="flex items-center justify-between cursor-pointer"><span class="font-medium">Are $49 tracks exclusive to me?</span><span class="text-white/50 group-open:rotate-180 transition">⌄</span></summary>
+          <p class="text-white/70 mt-3">No. They are non‑exclusive. For exclusivity, choose an Exclusive Custom Track.</p>
+        </details>
+        <details class="group py-4">
+          <summary class="flex items-center justify-between cursor-pointer"><span class="font-medium">What files do I receive?</span><span class="text-white/50 group-open:rotate-180 transition">⌄</span></summary>
+          <p class="text-white/70 mt-3">WAV 24‑bit and MP3 320k. I also include pre‑looped lengths (5/10/20/30 minutes) for uninterrupted content. Custom packages can include stems upon request.</p>
+        </details>
+        <details class="group py-4">
+          <summary class="flex items-center justify-between cursor-pointer"><span class="font-medium">Turnaround times?</span><span class="text-white/50 group-open:rotate-180 transition">⌄</span></summary>
+          <p class="text-white/70 mt-3">$49 tracks: instant download. Exclusive custom: 24–72 hours depending on package.</p>
+        </details>
+        <details class="group py-4">
+          <summary class="flex items-center justify-between cursor-pointer"><span class="font-medium">Will I get ContentID claims?</span><span class="text-white/50 group-open:rotate-180 transition">⌄</span></summary>
+          <p class="text-white/70 mt-3">No. I avoid public ContentID registration for these releases.</p>
+        </details>
+      </div>
+      <div id="license" class="mt-10 glass rounded-2xl p-6 card">
+        <h3 class="text-xl font-semibold">License (Plain Language)</h3>
+        <ul class="list-disc list-inside text-white/80 mt-3 space-y-2">
+          <li><span class="font-semibold">$49 Tracks (Non‑Exclusive):</span> One‑creator license. Unlimited posts across your official channels (OnlyFans, IG, TikTok, YouTube), including paid ads. No redistribution or reselling. Others may license the same track.</li>
+          <li><span class="font-semibold">Exclusive Custom Track:</span> Only you receive and may use the track. Exclusive license for your channels, unlimited usage including paid ads. No redistribution or reselling.</li>
+          <li><span class="font-semibold">Whitelisting:</span> Provide your channel handles at checkout if platform whitelisting is required.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT: section color 6 -->
+  <section id="contact" class="bg-[#0e0e10]">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="glass rounded-2xl p-8 card">
+        <h2 class="text-3xl font-semibold">Ask me a question</h2>
+        <p class="text-white/70 mt-2">Not sure what vibe you need? Ask me anything — I usually reply within 12–24 hours.</p>
+        <form class="mt-
