@@ -109,7 +109,8 @@
             </fieldset>
 
             <textarea name="brief" required placeholder="Short brief: vibe/tempo/energy, instruments, where it will be used, anything to avoid…" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 min-h-[130px]"></textarea>
-            <input name="reference_link" type="url" placeholder="Reference link (Spotify, TikTok, YouTube…)" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10" />
+            <!-- Optional reference link (NOT required) -->
+            <input name="reference_link" type="url" placeholder="Reference link (Spotify, TikTok, YouTube… — optional)" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10" />
 
             <div class="grid sm:grid-cols-3 gap-4">
               <select name="tempo" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10">
@@ -314,17 +315,15 @@
     renderTestimonials();
 
     // ---------- FORMS: Formspree integration ----------
-    // Replace these with your real Formspree endpoints:
-    const BRIEF_FORM_ENDPOINT = "https://formspree.io/f/REPLACE_WITH_BRIEF_ID";
-    const CONTACT_FORM_ENDPOINT = "https://formspree.io/f/REPLACE_WITH_CONTACT_ID";
+    // Your real Formspree endpoints (as provided):
+    const BRIEF_FORM_ENDPOINT = "https://formspree.io/f/mrbygwaw";
+    const CONTACT_FORM_ENDPOINT = "https://formspree.io/f/xyznyqnj";
 
     async function submitForm(formEl, endpoint, successBox, submitBtn, successText) {
       // Build payload
       const formData = new FormData(formEl);
-      // Optional: set a subject to help in Gmail
+      // Optional: subject to help in Gmail threading
       if (!formData.has("_subject")) formData.set("_subject", "New submission from Your Ghost Project");
-      // Forward-to set (not required if configured in Formspree dashboard)
-      // formData.set("_to", "yourghostproject@gmail.com");
 
       // UI state
       successBox.className = "mt-3 p-3 rounded-xl hide";
@@ -367,7 +366,7 @@
       e.preventDefault();
       submitForm(
         briefForm,
-        https://formspree.io/f/mrbygwaw,
+        BRIEF_FORM_ENDPOINT,
         briefMsg,
         briefSubmit,
         "Thanks for sharing your brief with me. I'll get back to you within 48 hours. Love."
@@ -382,7 +381,7 @@
       e.preventDefault();
       submitForm(
         contactForm,
-        https://formspree.io/f/xyznyqnj,
+        CONTACT_FORM_ENDPOINT,
         contactMsg,
         contactSubmit,
         "Thanks for reaching out to me. I'll get back to you within 24 hours. Love."
